@@ -1,44 +1,4 @@
 <!DOCTYPE html>
-
-<?php
-// Create connection
-$con=mysqli_connect("localhost","root", "123123", "check");
-
-// Check connection
-if (mysqli_connect_errno()){
-  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-}else {
-    echo "success to access";
-    echo "<br>";
-}
-$result = mysqli_query($con, "SELECT * FROM Node");
-
-$sql = "INSERT INTO Node (id, degree) Values ('$_GET[id]', '$_GET[degree]')";
-
-if (mysqli_query($con, $sql)) {
-    echo "Record updated successfully";
-} else {
-    echo "Error updating record: " . mysqli_error($con);
-}
-
-/*$sql = "UPDATE Node SET degree='25' WHERE id='3'";
-
-if (mysqli_query($con, $sql)) {
-    echo "Record updated successfully";
-} else {
-    echo "Error updating record: " . mysqli_error($con);
-}*/
-
-/*$sql = "DELETE FROM Node WHERE id=36";
-
-if (mysqli_query($con, $sql)) {
-    echo "Record deleted successfully";
-} else {
-    echo "Error deleting record: " . mysqli_error($con);
-}*/
-
-//echo $_GET['dg'];
-?>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -47,6 +7,8 @@ if (mysqli_query($con, $sql)) {
     <script type=”text/javascript” src=”eth.js”></script>
     <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
     <script>
+        var cookie_time = document.cookie;
+        
         if (typeof web3 !== 'undefined') {
           web3 = new Web3(web3.currentProvider);
         } else {
@@ -64,6 +26,16 @@ if (mysqli_query($con, $sql)) {
         var coinbase = web3.eth.coinbase;
         var balance = web3.fromWei(web3.eth.getBalance(coinbase), 'ether');
         
+        var time = new Date();
+        
+        var year = time.getFullYear();
+        var month = time.getMonth();
+        var day = time.getDate();
+        var hour = time.getHours();
+        var minuits = time.getMinutes();
+        
+        var fulltime = year + month + day + hour + minuits;
+        
         console.log(coinbase);
         console.log(balance.c); //check ether in the coinbase 
         
@@ -71,37 +43,23 @@ if (mysqli_query($con, $sql)) {
         console.log(to_account);
         
         var transactionObj = { //transaction object setting
-            from: from_account,
-            to:to_account,
-            value: 10000000
+            latitude = latitude,
+            longitude = longitude,
+            Hash = accounts,
+            Time = fulltime
         };
         
-        </script>
-        <?
-            while($row = mysqli_fetch_array($result)){
-                echo $row['id'] . " " . $row['degree'];
-                echo "<br>";
-
-                if ($row[1] == '50'){
-                    $str = '1';
-                    echo "degree is over 25";
-                }
-            }
-        ?>
-        <script>
-            var str = '<?= $str ?>';
-            if(str == '1'){
-                web3.eth.sendTransaction(transactionObj)        
-            }
-        </script>
+        if(cookie_time > 500000){
+            var latitude = request.getParameterValues("latitude");
+            var longitude = request.getParameterValues("longitude");
+            
+            web3.eth.sendTransaction(transactionObj);
+        }else {
+            //
+        }
+        
+    </script>
 </head>
 <body>
-
-    <form method="GET" action="test.php">
-    id : <input type="text" name="id"> <br>
-    degree : <input type="text" name="degree"> <br>
-    <input type="submit" name="submit" value="SUBMIT"><br>
-    </form>
-
 </body>
 </html>
